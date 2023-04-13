@@ -1,5 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Timers;
+using System;
+using UnityEngine;
 using System.Collections;
+
 
 public class HeroKnight : MonoBehaviour {
 
@@ -25,7 +28,9 @@ public class HeroKnight : MonoBehaviour {
     private float               m_delayToIdle = 0.0f;
     private float               m_rollDuration = 8.0f / 14.0f;
     private float               m_rollCurrentTime;
-
+    public float                timeLeft = 30.0f;
+    private                     GameObject player;
+     
 
     void Start ()
     {
@@ -36,15 +41,21 @@ public class HeroKnight : MonoBehaviour {
         m_wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
+        player = GameObject.FindWithTag("Player");
     }
 
     
     void Update ()
     {
         
+        
+        
+        timeLeft -= Time.deltaTime;
         m_timeSinceAttack += Time.deltaTime;
 
-        
+      
+
+
         if(m_rolling)
             m_rollCurrentTime += Time.deltaTime;
 
@@ -90,8 +101,7 @@ public class HeroKnight : MonoBehaviour {
         m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
 
        
-        m_isWallSliding = (m_wallSensorR1.State() && m_wallSensorR2.State()) || (m_wallSensorL1.State() && m_wallSensorL2.State());
-        m_animator.SetBool("WallSlide", m_isWallSliding);
+       
 
         
         if (Input.GetKeyDown("e") && !m_rolling)
@@ -105,10 +115,17 @@ public class HeroKnight : MonoBehaviour {
             m_animator.SetTrigger("Hurt");
 
         
+
+    
+        
+
+
         else if(Input.GetMouseButtonDown(0) && m_timeSinceAttack > 0.25f && !m_rolling)
         {
             m_currentAttack++;
-
+        
+           
+            timeLeft = 2.0f;
             
             if (m_currentAttack > 3)
                 m_currentAttack = 1;
@@ -122,6 +139,10 @@ public class HeroKnight : MonoBehaviour {
 
            
             m_timeSinceAttack = 0.0f;
+
+            
+        
+        
         }
 
      
@@ -169,6 +190,14 @@ public class HeroKnight : MonoBehaviour {
                 if(m_delayToIdle < 0)
                     m_animator.SetInteger("AnimState", 0);
         }
+    
+        if (Input.GetKeyDown("space") && m_grounded && !m_rolling)
+        {
+            
+
+            
+        }
+
     }
 
   
@@ -189,4 +218,13 @@ public class HeroKnight : MonoBehaviour {
             dust.transform.localScale = new Vector3(m_facingDirection, 1, 1);
         }
     }
+
+    void END()
+    {
+
+        
+
+    }
+
 }
+
