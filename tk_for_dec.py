@@ -5,7 +5,7 @@ import openai
 from tkinter.ttk import *
 from PIL import ImageTk
 
-openai.api_key = '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'
+openai.api_key = 'dfgxdfhxfhfgcjgcj'
 
 
 
